@@ -6,19 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:flutter_tts/flutter_tts.dart';
+
+
 import '../main.dart';
+
+FlutterTts _flutterTts = FlutterTts();
 
 enum ScreenMode { liveFeed, gallery }
 
 class CameraView extends StatefulWidget {
   CameraView(
       {Key? key,
-      required this.title,
-      required this.customPaint,
-      this.text,
-      required this.onImage,
-      this.onScreenModeChanged,
-      this.initialDirection = CameraLensDirection.back})
+        required this.title,
+        required this.customPaint,
+        this.text,
+        required this.onImage,
+        this.onScreenModeChanged,
+        this.initialDirection = CameraLensDirection.back})
       : super(key: key);
 
   final String title;
@@ -50,13 +55,13 @@ class _CameraViewState extends State<CameraView> {
     _imagePicker = ImagePicker();
 
     if (cameras.any(
-      (element) =>
-          element.lensDirection == widget.initialDirection &&
+          (element) =>
+      element.lensDirection == widget.initialDirection &&
           element.sensorOrientation == 90,
     )) {
       _cameraIndex = cameras.indexOf(
         cameras.firstWhere((element) =>
-            element.lensDirection == widget.initialDirection &&
+        element.lensDirection == widget.initialDirection &&
             element.sensorOrientation == 90),
       );
     } else {
@@ -96,8 +101,8 @@ class _CameraViewState extends State<CameraView> {
                   _mode == ScreenMode.liveFeed
                       ? Icons.photo_library_outlined
                       : (Platform.isIOS
-                          ? Icons.camera_alt_outlined
-                          : Icons.camera),
+                      ? Icons.camera_alt_outlined
+                      : Icons.camera),
                 ),
               ),
             ),
@@ -151,6 +156,8 @@ class _CameraViewState extends State<CameraView> {
     // to prevent scaling down, invert the value
     if (scale < 1) scale = 1 / scale;
 
+
+
     return Container(
       color: Colors.black,
       child: Stack(
@@ -161,8 +168,8 @@ class _CameraViewState extends State<CameraView> {
             child: Center(
               child: _changingCameraLens
                   ? Center(
-                      child: const Text('Changing camera lens'),
-                    )
+                child: const Text('Changing camera lens'),
+              )
                   : CameraPreview(_controller!),
             ),
           ),
@@ -185,30 +192,91 @@ class _CameraViewState extends State<CameraView> {
                   ? null
                   : (maxZoomLevel - 1).toInt(),
             ),
-          )
+          ),
         ],
       ),
     );
+
   }
+
+  // Widget _liveFeedBody() {
+  //   if (_controller?.value.isInitialized == false) {
+  //     return Container();
+  //   }
+  //
+  //   final size = MediaQuery.of(context).size;
+  //   var scale = size.aspectRatio * _controller!.value.aspectRatio;
+  //   if (scale < 1) scale = 1 / scale;
+  //
+  //   // Scale up the camera preview by a factor of 1.5
+  //   scale *= 1;
+  //
+  //   return Container(
+  //     color: Colors.black,
+  //     child: Stack(
+  //       fit: StackFit.expand,
+  //       children: <Widget>[
+  //         Transform.scale(
+  //           scale: scale,
+  //           child: Center(
+  //             child: _changingCameraLens
+  //                 ? Center(
+  //               child: const Text('Changing camera lens'),
+  //             )
+  //                 : CameraPreview(_controller!),
+  //           ),
+  //         ),
+  //         if (widget.customPaint != null) widget.customPaint!,
+  //         Positioned(
+  //           bottom: 100,
+  //           left: 50,
+  //           right: 50,
+  //           child: Slider(
+  //             value: zoomLevel,
+  //             min: minZoomLevel,
+  //             max: maxZoomLevel,
+  //             onChanged: (newSliderValue) {
+  //               setState(() {
+  //                 zoomLevel = newSliderValue;
+  //                 _controller!.setZoomLevel(zoomLevel);
+  //               });
+  //             },
+  //             divisions: (maxZoomLevel - 1).toInt() < 1
+  //                 ? null
+  //                 : (maxZoomLevel - 1).toInt(),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+
+
+
+
+
+
+
 
   Widget _galleryBody() {
     return ListView(shrinkWrap: true, children: [
       _image != null
           ? SizedBox(
-              height: 400,
-              width: 400,
-              child: Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  Image.file(_image!),
-                  if (widget.customPaint != null) widget.customPaint!,
-                ],
-              ),
-            )
+        height: 400,
+        width: 400,
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Image.file(_image!),
+            if (widget.customPaint != null) widget.customPaint!,
+          ],
+        ),
+      )
           : Icon(
-              Icons.image,
-              size: 200,
-            ),
+        Icons.image,
+        size: 200,
+      ),
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: ElevatedButton(
@@ -231,6 +299,7 @@ class _CameraViewState extends State<CameraView> {
         ),
     ]);
   }
+
 
   Future _getImage(ImageSource source) async {
     setState(() {
@@ -318,19 +387,19 @@ class _CameraViewState extends State<CameraView> {
     final bytes = allBytes.done().buffer.asUint8List();
 
     final Size imageSize =
-        Size(image.width.toDouble(), image.height.toDouble());
+    Size(image.width.toDouble(), image.height.toDouble());
 
     final camera = cameras[_cameraIndex];
     final imageRotation =
-        InputImageRotationValue.fromRawValue(camera.sensorOrientation);
+    InputImageRotationValue.fromRawValue(camera.sensorOrientation);
     if (imageRotation == null) return;
 
     final inputImageFormat =
-        InputImageFormatValue.fromRawValue(image.format.raw);
+    InputImageFormatValue.fromRawValue(image.format.raw);
     if (inputImageFormat == null) return;
 
     final planeData = image.planes.map(
-      (Plane plane) {
+          (Plane plane) {
         return InputImagePlaneMetadata(
           bytesPerRow: plane.bytesPerRow,
           height: plane.height,
@@ -347,7 +416,7 @@ class _CameraViewState extends State<CameraView> {
     );
 
     final inputImage =
-        InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
+    InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
 
     widget.onImage(inputImage);
   }

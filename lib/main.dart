@@ -39,7 +39,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Google ML Kit Demo App'),
+        title: Text('iRead'),
         centerTitle: true,
         elevation: 0,
       ),
@@ -50,32 +50,33 @@ class Home extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
-                  ExpansionTile(
-                    title: const Text('Vision APIs'),
-                    children: [
-                      CustomCard('Barcode Scanning', BarcodeScannerView()),
-                      CustomCard('Face Detection', FaceDetectorView()),
-                      CustomCard('Image Labeling', ImageLabelView()),
-                      CustomCard('Object Detection', ObjectDetectorView()),
-                      CustomCard('Text Recognition', TextRecognizerView()),
-                      CustomCard('Digital Ink Recognition', DigitalInkView()),
-                      CustomCard('Pose Detection', PoseDetectorView()),
-                      CustomCard('Selfie Segmentation', SelfieSegmenterView()),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ExpansionTile(
-                    title: const Text('Natural Language APIs'),
-                    children: [
-                      CustomCard('Language ID', LanguageIdentifierView()),
-                      CustomCard(
-                          'On-device Translation', LanguageTranslatorView()),
-                      CustomCard('Smart Reply', SmartReplyView()),
-                      CustomCard('Entity Extraction', EntityExtractionView()),
-                    ],
-                  ),
+                  CustomCard('Text Recognition', TextRecognizerView()),
+                  // ExpansionTile(
+                  //   title: const Text('Vision APIs'),
+                  //   children: [
+                  //     // CustomCard('Barcode Scanning', BarcodeScannerView()),
+                  //     // CustomCard('Face Detection', FaceDetectorView()),
+                  //     // CustomCard('Image Labeling', ImageLabelView()),
+                  //     // CustomCard('Object Detection', ObjectDetectorView()),
+                  //    // CustomCard('Text Recognition', TextRecognizerView()),
+                  //     // CustomCard('Digital Ink Recognition', DigitalInkView()),
+                  //     // CustomCard('Pose Detection', PoseDetectorView()),
+                  //     // CustomCard('Selfie Segmentation', SelfieSegmenterView()),
+                  //   ],
+                  // ),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
+                  // ExpansionTile(
+                  //   title: const Text('Natural Language APIs'),
+                  //   children: [
+                  //     CustomCard('Language ID', LanguageIdentifierView()),
+                  //     CustomCard(
+                  //         'On-device Translation', LanguageTranslatorView()),
+                  //     CustomCard('Smart Reply', SmartReplyView()),
+                  //     CustomCard('Entity Extraction', EntityExtractionView()),
+                  //   ],
+                  // ),
                 ],
               ),
             ),

@@ -139,11 +139,27 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_tts:
+    dependency: "direct main"
+    description:
+      name: flutter_tts
+      sha256: e91ad17793ad12cca9c3066accf99ceb353bf0355ad06b767176f178b5c428f6
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.6.3"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_ml_kit:
+    dependency: "direct main"
+    description:
+      name: google_ml_kit
+      sha256: b1cd928f10c2079487503365ff959647d82caaf87a365082bde77d8b36b5432d
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.1"
   google_mlkit_barcode_scanning:
     dependency: "direct main"
     description:
@@ -152,7 +168,7 @@ packages:
     source: path
     version: "0.5.0"
   google_mlkit_commons:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: google_mlkit_commons
       sha256: af63771903947d5523d9e991a939a4b8bf994f11661c9b9c8a71d7d3997115f8
