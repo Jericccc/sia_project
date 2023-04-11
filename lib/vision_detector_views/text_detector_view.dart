@@ -167,7 +167,48 @@ class _TextRecognizerViewState extends State<TextRecognizerView> {
     await flutterTts.stop();
     super.dispose();
   }
-  
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Stack(
+  //     children: [
+  //       CameraView(
+  //         title: 'Text Detector',
+  //         customPaint: _customPaint,
+  //         text: _text,
+  //         onImage: (inputImage) {
+  //           processImage(inputImage);
+  //
+  //         },
+  //       ),
+  //       Positioned(
+  //         bottom: 16.0,
+  //         right: 16.0,
+  //         child: Row(
+  //           children: [
+  //             FloatingActionButton(
+  //               onPressed: () {
+  //                 // Play button logic
+  //
+  //                 speak(_text ?? '');
+  //               },
+  //               child: Icon(Icons.play_arrow),
+  //             ),
+  //             SizedBox(width: 16.0),
+  //             FloatingActionButton(
+  //               onPressed: () {
+  //                 // Pause button logic
+  //                 flutterTts.pause();
+  //               },
+  //               child: Icon(Icons.pause),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -188,8 +229,10 @@ class _TextRecognizerViewState extends State<TextRecognizerView> {
               FloatingActionButton(
                 onPressed: () {
                   // Play button logic
-
-                  speak(_text ?? '');
+                  if (!_isPlaying && _text != null && _text!.isNotEmpty) {
+                    speak(_text!);
+                    _isPlaying = true;
+                  }
                 },
                 child: Icon(Icons.play_arrow),
               ),
@@ -198,6 +241,7 @@ class _TextRecognizerViewState extends State<TextRecognizerView> {
                 onPressed: () {
                   // Pause button logic
                   flutterTts.pause();
+                  _isPlaying = false;
                 },
                 child: Icon(Icons.pause),
               ),
@@ -207,6 +251,7 @@ class _TextRecognizerViewState extends State<TextRecognizerView> {
       ],
     );
   }
+
 
   Future<void> processImage(InputImage inputImage) async {
     if (!_canProcess) return;

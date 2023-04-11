@@ -21,6 +21,7 @@ class CameraView extends StatefulWidget {
         required this.title,
         required this.customPaint,
         this.text,
+
         required this.onImage,
         this.onScreenModeChanged,
         this.initialDirection = CameraLensDirection.back})
@@ -38,7 +39,9 @@ class CameraView extends StatefulWidget {
 }
 
 class _CameraViewState extends State<CameraView> {
+
   ScreenMode _mode = ScreenMode.liveFeed;
+
   CameraController? _controller;
   File? _image;
   String? _path;
@@ -47,6 +50,8 @@ class _CameraViewState extends State<CameraView> {
   double zoomLevel = 0.0, minZoomLevel = 0.0, maxZoomLevel = 0.0;
   final bool _allowPicker = true;
   bool _changingCameraLens = false;
+
+
 
   @override
   void initState() {
@@ -86,14 +91,28 @@ class _CameraViewState extends State<CameraView> {
     super.dispose();
   }
 
+
+
+
+  Future<void> speak(String text) async {
+  await _flutterTts.setLanguage('en-US');
+  await _flutterTts.setPitch(1.0);
+  await _flutterTts.setSpeechRate(0.5);
+  await _flutterTts.speak(text);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+
         actions: [
+
           if (_allowPicker)
             Padding(
+
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: _switchScreenMode,
@@ -140,6 +159,13 @@ class _CameraViewState extends State<CameraView> {
     }
     return body;
   }
+
+  // Future<void> speak(String text) async {
+  //   await _flutterTts.setLanguage('en-US');
+  //   await _flutterTts.setPitch(1.0);
+  //   await _flutterTts.setSpeechRate(0.5);
+  //   await _flutterTts.speak(text);
+  // }
 
   Widget _liveFeedBody() {
     if (_controller?.value.isInitialized == false) {
