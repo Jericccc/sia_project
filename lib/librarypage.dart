@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'ocr_speech.dart';
+
 
 
 class Library extends StatefulWidget{
@@ -10,6 +12,14 @@ class Library extends StatefulWidget{
 }
 
 class _LibraryState extends State<Library>{
+
+  void navigateToOcr(BuildContext context){
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+      return Ocr_speechOutput();
+    }));
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +27,9 @@ class _LibraryState extends State<Library>{
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat ,
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
-          onPressed: () {},
+          onPressed: () {
+            navigateToOcr(context);
+          },
         ),
         body: SafeArea(
             child: Padding(
@@ -57,4 +69,3 @@ class _LibraryState extends State<Library>{
 
   }
 }
-
