@@ -160,12 +160,7 @@ class _CameraViewState extends State<CameraView> {
     return body;
   }
 
-  // Future<void> speak(String text) async {
-  //   await _flutterTts.setLanguage('en-US');
-  //   await _flutterTts.setPitch(1.0);
-  //   await _flutterTts.setSpeechRate(0.5);
-  //   await _flutterTts.speak(text);
-  // }
+
 
   Widget _liveFeedBody() {
     if (_controller?.value.isInitialized == false) {

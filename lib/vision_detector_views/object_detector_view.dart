@@ -9,6 +9,9 @@ import 'package:path_provider/path_provider.dart';
 
 import 'camera_view.dart';
 import 'painters/object_detector_painter.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
+FlutterTts _flutterTts = FlutterTts();
 
 class ObjectDetectorView extends StatefulWidget {
   @override
@@ -21,13 +24,29 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
   bool _isBusy = false;
   CustomPaint? _customPaint;
   String? _text;
+  String? objectName;
+  bool _isPlaying = false;
+
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //
+  //   _initializeDetector(DetectionMode.stream);
+  // }
 
   @override
   void initState() {
     super.initState();
-
     _initializeDetector(DetectionMode.stream);
+
+    _flutterTts = FlutterTts();
+    _flutterTts.setLanguage("en-US");
+    _flutterTts.setSpeechRate(0.5);
   }
+
+
+
 
   @override
   void dispose() {
@@ -38,22 +57,61 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
 
   @override
   Widget build(BuildContext context) {
-    return CameraView(
-      title: 'Object Detector',
-      customPaint: _customPaint,
-      text: _text,
-      onImage: (inputImage) {
-        processImage(inputImage);
-      },
-      onScreenModeChanged: _onScreenModeChanged,
-      initialDirection: CameraLensDirection.back,
+    return Stack(
+      children: [
+        CameraView(
+          title: 'Object Detector',
+          customPaint: _customPaint,
+          text: _text,
+          onImage: (inputImage) {
+            processImage(inputImage);
+          },
+          onScreenModeChanged: _onScreenModeChanged,
+
+          initialDirection: CameraLensDirection.back,
+        ),
+        Positioned(
+          bottom: 16.0,
+          right: 16.0,
+          child: Row(
+            children: [
+              FloatingActionButton(
+                onPressed: () {
+                  // Play button logic
+                  if (!_isPlaying && _text != null && _text!.isNotEmpty) {
+                    speak(_text!);
+                    _isPlaying = true;
+                  }
+                },
+                child: Icon(Icons.play_arrow),
+              ),
+              SizedBox(width: 16.0),
+              FloatingActionButton(
+                onPressed: () {
+                  // Pause button logic
+                  flutterTts.pause();
+                  _isPlaying = false;
+                },
+                child: Icon(Icons.pause),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
+
+
+
+
+
+
 
   void _onScreenModeChanged(ScreenMode mode) {
     switch (mode) {
       case ScreenMode.gallery:
         _initializeDetector(DetectionMode.single);
+
         return;
 
       case ScreenMode.liveFeed:
@@ -64,6 +122,12 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
 
   void _initializeDetector(DetectionMode mode) async {
     print('Set detector in mode: $mode');
+
+
+    // initialize FlutterTTS
+    await _flutterTts.setLanguage("en-US");
+    await _flutterTts.setSpeechRate(0.5);
+
 
     // uncomment next lines if you want to use the default model
     // final options = ObjectDetectorOptions(
@@ -119,12 +183,16 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
     } else {
       String text = 'Objects found: ${objects.length}\n\n';
       for (final object in objects) {
-        text +=
-            'Object:  trackingId: ${object.trackingId} - ${object.labels.map((e) => e.text)}\n\n';
+        text += 'Object:  trackingId: ${object.trackingId} - ${object.labels.map((e) => e.text)}\n\n';
+       objectName = '${object.labels.map((e) => e.text)}';
       }
       _text = text;
       // TODO: set _customPaint to draw boundingRect on top of image
       _customPaint = null;
+
+
+      // Speak the text using FlutterTTS
+      await _flutterTts.speak(text);
     }
     _isBusy = false;
     if (mounted) {
@@ -146,4 +214,11 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
     }
     return file.path;
   }
+}
+
+Future<void> speak(String text) async {
+  await flutterTts.setLanguage('en-US');
+  await flutterTts.setPitch(1.0);
+  await flutterTts.setSpeechRate(0.5);
+  await flutterTts.speak(text);
 }

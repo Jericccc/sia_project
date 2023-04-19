@@ -1,9 +1,16 @@
+import 'dart:async';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
 import 'camera_view.dart';
 import 'painters/face_detector_painter.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
+FlutterTts _flutterTts = FlutterTts();
+Timer? _detectionCooldown;
+
 
 class FaceDetectorView extends StatefulWidget {
   @override
@@ -21,6 +28,8 @@ class _FaceDetectorViewState extends State<FaceDetectorView> {
   bool _isBusy = false;
   CustomPaint? _customPaint;
   String? _text;
+  bool _isFlashOn = false; // added flash state variable
+
 
   @override
   void dispose() {
@@ -37,10 +46,13 @@ class _FaceDetectorViewState extends State<FaceDetectorView> {
       text: _text,
       onImage: (inputImage) {
         processImage(inputImage);
+
       },
       initialDirection: CameraLensDirection.front,
+
     );
   }
+
 
   Future<void> processImage(InputImage inputImage) async {
     if (!_canProcess) return;
@@ -50,6 +62,29 @@ class _FaceDetectorViewState extends State<FaceDetectorView> {
       _text = '';
     });
     final faces = await _faceDetector.processImage(inputImage);
+
+
+    // if (faces.isNotEmpty) {
+    //   final message = 'Face detected';
+    //   await speak(message);
+    //
+    //   if (_detectionCooldown?.isActive ?? false) {
+    //     _detectionCooldown!.cancel();
+    //     _detectionCooldown = null;
+    //   }
+    //   _detectionCooldown = Timer(Duration(seconds: 4), () {
+    //     _detectionCooldown = null;
+    //   });
+    // }
+
+    if (faces.isNotEmpty) {
+      final message = 'Face detected';
+      await speakWithDelay(message, Duration(seconds: 2));
+    }
+
+
+
+
     if (inputImage.inputImageData?.size != null &&
         inputImage.inputImageData?.imageRotation != null) {
       final painter = FaceDetectorPainter(
@@ -71,4 +106,14 @@ class _FaceDetectorViewState extends State<FaceDetectorView> {
       setState(() {});
     }
   }
+}
+
+
+Future<void> speak(String message) async {
+  await _flutterTts.speak(message);
+}
+
+Future<void> speakWithDelay(String message, Duration delay) async {
+  await Future.delayed(delay);
+  await _flutterTts.speak(message);
 }
