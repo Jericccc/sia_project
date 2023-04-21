@@ -2,6 +2,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
+import 'image_classification.dart';
 import 'nlp_detector_views/entity_extraction_view.dart';
 import 'nlp_detector_views/language_identifier_view.dart';
 import 'nlp_detector_views/language_translator_view.dart';
@@ -21,6 +22,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 List<CameraDescription> cameras = [];
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +39,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
+      navigatorObservers: [ ],
       initialRoute: '/',
       routes: {
         '/faceDetector': (context) => FaceDetectorView(),
@@ -53,7 +57,19 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with RouteAware{
+
+
+  @override
+  void initState(){
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) => setVisuals("first"));
+  }
+
+  void setVisuals(String screen){
+    var visual = "{\"screen\" : \"$screen\"}";
+    AlanVoice.setVisualState(visual);
+  }
 
 
   _HomePageState() {
@@ -87,6 +103,13 @@ class _HomePageState extends State<HomePage> {
             context, MaterialPageRoute(builder: (context) => TextRecognizerView()));
         break;
 
+      // case "navigate to image classification":
+      //   Navigator.push(
+      //       context, MaterialPageRoute(builder: (context) => ImageClassification()));
+      //   break;
+
+
+
       case "back":
         Navigator.pop(context);
         break;
@@ -118,7 +141,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   // CustomCard('Text Recognition', TextRecognizerView()),
-                  CustomCard('Barcode Scanning', BarcodeScannerView()),
+                  // CustomCard('ImageClassification', ImageClassification()),
                   CustomCard('Face Detection', FaceDetectorView()),
                   CustomCard('Image Labeling', ImageLabelView()),
                   CustomCard('Object Detection', ObjectDetectorView()),

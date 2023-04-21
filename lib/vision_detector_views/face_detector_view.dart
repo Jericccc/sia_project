@@ -7,9 +7,12 @@ import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'camera_view.dart';
 import 'painters/face_detector_painter.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:alan_voice/alan_voice.dart';
 
 FlutterTts _flutterTts = FlutterTts();
 Timer? _detectionCooldown;
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 
 class FaceDetectorView extends StatefulWidget {
@@ -17,7 +20,39 @@ class FaceDetectorView extends StatefulWidget {
   State<FaceDetectorView> createState() => _FaceDetectorViewState();
 }
 
-class _FaceDetectorViewState extends State<FaceDetectorView> {
+class _FaceDetectorViewState extends State<FaceDetectorView> with RouteAware{
+
+
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void dispose(){
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPush(){
+    setVisuals("second");
+  }
+
+  @override
+  void didPop(){
+    setVisuals("first");
+  }
+
+  void setVisuals(String screen){
+    var visual = "{\"screen\" : \"$screen\"}";
+    AlanVoice.setVisualState(visual);
+  }
+
+
+
+
   final FaceDetector _faceDetector = FaceDetector(
     options: FaceDetectorOptions(
       enableContours: true,
@@ -32,7 +67,7 @@ class _FaceDetectorViewState extends State<FaceDetectorView> {
 
 
   @override
-  void dispose() {
+  void dispose1() {
     _canProcess = false;
     _faceDetector.close();
     super.dispose();

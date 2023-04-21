@@ -19,6 +19,11 @@ dependencies:
   path_provider: ^2.0.11
   flutter_tts: ^3.6.3
   alan_voice: ^3.0.0
+
+  firebase_core: ^2.10.0
+  firebase_analytics: ^10.2.1 
+
+#  tflite: ^1.1.2
 ##  firebase_ml_vision: ^0.11.0
 #  flutter_tesseract_ocr: ^0.4.20
 #  firebase_core: ^1.10.0
