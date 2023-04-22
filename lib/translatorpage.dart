@@ -13,7 +13,7 @@ class TranslatorPage extends StatelessWidget {
         title: const Text('Library Page'),
       ),
       body: const Center(
-        child: Text('This is translator Page.'),
+        child: Text('This is trslator Page.'),
       ),
     );
   }

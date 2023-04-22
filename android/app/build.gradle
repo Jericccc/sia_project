@@ -20,12 +20,16 @@ def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
-
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin:  'com.google.gms.google-services'
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
+
 
     lintOptions {
         disable 'InvalidPackage'
@@ -43,7 +47,7 @@ android {
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        multiDexEnabled true
+        //multiDexEnabled true
     }
 
     buildTypes {
@@ -64,7 +68,15 @@ dependencies {
     // Add language package you need to use
     implementation 'com.google.mlkit:text-recognition-chinese:16.0.0-beta5'
     //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+// Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:31.5.0')
 
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+
+    // Add the dependency for the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
     // implementation 'com.google.mlkit:text-recognition-devanagari:16.0.0-beta5'
     // implementation 'com.google.mlkit:text-recognition-japanese:16.0.0-beta5'
     // implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta5'

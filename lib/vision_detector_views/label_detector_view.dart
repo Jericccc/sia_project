@@ -8,18 +8,57 @@ import 'package:path_provider/path_provider.dart';
 
 import 'camera_view.dart';
 import 'painters/label_detector_painter.dart';
+import 'package:alan_voice/alan_voice.dart';
+
+
+
 
 class ImageLabelView extends StatefulWidget {
   @override
   State<ImageLabelView> createState() => _ImageLabelViewState();
 }
 
-class _ImageLabelViewState extends State<ImageLabelView> {
+class _ImageLabelViewState extends State<ImageLabelView> with RouteAware{
+  final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
   late ImageLabeler _imageLabeler;
   bool _canProcess = false;
   bool _isBusy = false;
   CustomPaint? _customPaint;
   String? _text;
+
+
+
+  // @override
+  // void didChangeDependencies(){
+  //   super.didChangeDependencies();
+  //   routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  // }
+  //
+  // @override
+  // void dispose(){
+  //   routeObserver.unsubscribe(this);
+  //   super.dispose();
+  // }
+  //
+  // @override
+  // void didPush(){
+  //   //setVisuals("second");
+  //   setVisuals("second face");
+  //
+  // }
+  //
+  // @override
+  // void didPop(){
+  //   setVisuals("first");
+  // }
+  //
+  // void setVisuals(String screen){
+  //   var visual = "{\"screen\" : \"$screen\"}";
+  //   AlanVoice.setVisualState(visual);
+  // }
+
+
 
   @override
   void initState() {
@@ -29,7 +68,7 @@ class _ImageLabelViewState extends State<ImageLabelView> {
   }
 
   @override
-  void dispose() {
+  void dispose2() {
     _canProcess = false;
     _imageLabeler.close();
     super.dispose();

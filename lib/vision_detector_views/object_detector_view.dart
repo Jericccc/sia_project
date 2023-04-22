@@ -1,4 +1,5 @@
 import 'dart:io' as io;
+import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -10,15 +11,20 @@ import 'package:path_provider/path_provider.dart';
 import 'camera_view.dart';
 import 'painters/object_detector_painter.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:alan_voice/alan_voice.dart';
+
 
 FlutterTts _flutterTts = FlutterTts();
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 
 class ObjectDetectorView extends StatefulWidget {
   @override
   State<ObjectDetectorView> createState() => _ObjectDetectorView();
 }
 
-class _ObjectDetectorView extends State<ObjectDetectorView> {
+class _ObjectDetectorView extends State<ObjectDetectorView> with RouteAware{
   late ObjectDetector _objectDetector;
   bool _canProcess = false;
   bool _isBusy = false;
@@ -26,6 +32,44 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
   String? _text;
   String? objectName;
   bool _isPlaying = false;
+  bool _flashOn = false;
+
+  CameraController? _cameraController;
+  List<CameraDescription>? _cameras;
+  int _selectedCameraIndex = 0;
+
+
+  // @override
+  // void didChangeDependencies(){
+  //   super.didChangeDependencies();
+  //   routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  // }
+  //
+  // @override
+  // void dispose(){
+  //   _canProcess = false;
+  //   _objectDetector.close();
+  //   routeObserver.unsubscribe(this);
+  //   super.dispose();
+  // }
+  //
+  // @override
+  // void didPush(){
+  //   //setVisuals("second");
+  //   setVisuals("second face");
+  //
+  // }
+  //
+  // @override
+  // void didPop(){
+  //   setVisuals("first");
+  // }
+  //
+  // void setVisuals(String screen){
+  //   var visual = "{\"screen\" : \"$screen\"}";
+  //   AlanVoice.setVisualState(visual);
+  // }
+  //
 
 
   // @override
@@ -48,16 +92,20 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
 
 
 
-  @override
-  void dispose() {
-    _canProcess = false;
-    _objectDetector.close();
-    super.dispose();
-  }
+
+  // @override
+  // void dispose() {
+  //   _canProcess = false;
+  //   _objectDetector.close();
+  //   super.dispose();
+  // }
+
 
   @override
   Widget build(BuildContext context) {
+
     return Stack(
+
       children: [
         CameraView(
           title: 'Object Detector',
@@ -94,15 +142,17 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
                 },
                 child: Icon(Icons.pause),
               ),
+
             ],
           ),
         ),
       ],
+
+
     );
+
+
   }
-
-
-
 
 
 
@@ -165,6 +215,8 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
     _canProcess = true;
   }
 
+
+
   Future<void> processImage(InputImage inputImage) async {
     if (!_canProcess) return;
     if (_isBusy) return;
@@ -200,6 +252,8 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
     }
   }
 
+
+
   Future<String> _getModel(String assetPath) async {
     if (io.Platform.isAndroid) {
       return 'flutter_assets/$assetPath';
@@ -222,3 +276,5 @@ Future<void> speak(String text) async {
   await flutterTts.setSpeechRate(0.5);
   await flutterTts.speak(text);
 }
+
+

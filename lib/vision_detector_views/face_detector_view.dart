@@ -31,13 +31,17 @@ class _FaceDetectorViewState extends State<FaceDetectorView> with RouteAware{
 
   @override
   void dispose(){
+    _canProcess = false;
+    _faceDetector.close();
     routeObserver.unsubscribe(this);
     super.dispose();
   }
 
   @override
   void didPush(){
-    setVisuals("second");
+    //setVisuals("second");
+    setVisuals("second face");
+
   }
 
   @override
@@ -66,12 +70,12 @@ class _FaceDetectorViewState extends State<FaceDetectorView> with RouteAware{
   bool _isFlashOn = false; // added flash state variable
 
 
-  @override
-  void dispose1() {
-    _canProcess = false;
-    _faceDetector.close();
-    super.dispose();
-  }
+  // @override
+  // void dispose1() {
+  //   _canProcess = false;
+  //   _faceDetector.close();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -144,13 +144,16 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 import 'camera_view.dart';
 import 'painters/text_detector_painter.dart';
+import 'package:alan_voice/alan_voice.dart';
+
+final RouteObserver<PageRoute> routeObserver1 = RouteObserver<PageRoute>();
 
 class TextRecognizerView extends StatefulWidget {
   @override
   State<TextRecognizerView> createState() => _TextRecognizerViewState();
 }
 
-class _TextRecognizerViewState extends State<TextRecognizerView> {
+class _TextRecognizerViewState extends State<TextRecognizerView> with RouteAware{
   final TextRecognizer _textRecognizer =
   TextRecognizer(script: TextRecognitionScript.chinese);
   bool _canProcess = true;
@@ -160,13 +163,48 @@ class _TextRecognizerViewState extends State<TextRecognizerView> {
   FlutterTts flutterTts = FlutterTts();
   bool _isPlaying = false;
 
+
   @override
-  void dispose() async {
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    routeObserver1.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  Future<void> dispose() async {
     _canProcess = false;
     _textRecognizer.close();
     await flutterTts.stop();
+    routeObserver1.unsubscribe(this);
     super.dispose();
   }
+
+  @override
+  void didPush(){
+    //setVisuals("second");
+    setVisuals("second face");
+
+  }
+
+  @override
+  void didPop(){
+    setVisuals("first");
+  }
+
+  void setVisuals(String screen){
+    var visual = "{\"screen\" : \"$screen\"}";
+    AlanVoice.setVisualState(visual);
+  }
+
+
+
+  // @override
+  // void dispose() async {
+  //   _canProcess = false;
+  //   _textRecognizer.close();
+  //   await flutterTts.stop();
+  //   super.dispose();
+  // }
 
   // @override
   // Widget build(BuildContext context) {

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "723971830049",
+    "project_id": "iread-fb3b2",
+    "storage_bucket": "iread-fb3b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723971830049:android:2da783fd8448bca58ece60",
+        "android_client_info": {
+          "package_name": "com.google_mlkit_example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723971830049-961796173qebj3fatsgintpulrielm2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAg9nbzeCYyu514RXif2yoMCcrmgaPyj0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "723971830049-961796173qebj3fatsgintpulrielm2m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "723971830049-7ucakif0rbub9lmrqokdv6lu9cvfibhe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.google.ml.kit.flutter.example"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

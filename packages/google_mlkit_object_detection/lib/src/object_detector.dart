@@ -4,8 +4,6 @@ import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 final FlutterTts flutterTts = FlutterTts();
-
-
 /// An object detector and tracker that detects objects in an [InputImage] and supports tracking them.
 class ObjectDetector {
   static const services.MethodChannel _channel =
@@ -31,7 +29,9 @@ class ObjectDetector {
     final objects = <DetectedObject>[];
     for (final dynamic json in result) {
 
-     objects.add(DetectedObject.fromJson(json));
+     //objects.add(DetectedObject.fromJson(json));//original
+
+
      //  final object = DetectedObject.fromJson(json);
      //  final object1 =  objects.add(DetectedObject.fromJson(json));;
      //
@@ -40,11 +40,12 @@ class ObjectDetector {
      //  await speakDetectedObject(object1);
 
 
+     final object = DetectedObject.fromJson(json);
 
+     objects.add(object);
+     await speakDetectedObject(object);
+     await Future.delayed(Duration(seconds: 2));
     }
-
-
-
     return objects;
   }
 
@@ -256,9 +257,6 @@ class FirebaseObjectDetectorModelManager extends ModelManager {
             method: 'vision#manageFirebaseModels');
 }
 
-
 Future<void> speakDetectedObject(DetectedObject object) async {
   await flutterTts.speak('I see a ${object.labels.first.text}');
 }
-
-

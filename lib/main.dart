@@ -1,8 +1,15 @@
 
 import 'package:camera/camera.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+// import 'package:get/get_core/src/get_main.dart';
 
 import 'image_classification.dart';
+import 'login_signup/authentication_repository.dart';
+import 'login_signup/firebase_options.dart';
+import 'login_signup/onboardingpage.dart';
 import 'nlp_detector_views/entity_extraction_view.dart';
 import 'nlp_detector_views/language_identifier_view.dart';
 import 'nlp_detector_views/language_translator_view.dart';
@@ -20,44 +27,101 @@ import 'package:alan_voice/alan_voice.dart';
 // import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
+
+
+
+// Future<void> main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//
+//   cameras = await availableCameras();
+//
+//   runApp(MyApp());
+// }
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
+      .then((value) => Get.put(AuthenticationRepository()));
+  runApp(const MyApp());
+}
 List<CameraDescription> cameras = [];
 
-final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
-
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  cameras = await availableCameras();
-
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return  const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
-      navigatorObservers: [ ],
-      initialRoute: '/',
-      routes: {
-        '/faceDetector': (context) => FaceDetectorView(),
-      },
+      home: Splash(),
+    );
+  }
+}
+
+class Splash extends StatefulWidget {
+  const Splash({Key? key}) : super(key: key);
+
+  @override
+  State<Splash> createState() => _SplashState();
+}
+
+class _SplashState extends State<Splash> {
+  void initState(){
+    super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OnboardingScreen()));
+    });
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Scaffold(
+      backgroundColor: Color(0xFFF0FEFF),
+      body: Container(
+        margin: const EdgeInsets.only(top: 170.0),
+        padding: EdgeInsets.only(top: 50.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+
+          children: [
+            Image(image: const AssetImage('lib/login_signup/images/logoiread7.png'), height: size.height * 0.33, ),
+            const SizedBox(height: 250,),
+          ],
+        ),
+      ),
     );
   }
 }
 
 
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return GetMaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: HomePage1(),
+//       navigatorObservers: [ ],
+//       initialRoute: '/',
+//       routes: {
+//         '/faceDetector': (context) => FaceDetectorView(),
+//       },
+//     );
+//   }
+// }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+
+
+class HomePage1 extends StatefulWidget {
+  const HomePage1({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage1> createState() => _HomePageState1();
 }
 
-class _HomePageState extends State<HomePage> with RouteAware{
+class _HomePageState1 extends State<HomePage1> with RouteAware{
 
 
   @override
